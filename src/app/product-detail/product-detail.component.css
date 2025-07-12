@@ -1,0 +1,22 @@
+.product-detail {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 15px;
+}
+
+.product-detail img {
+  width: 150px;
+  height: 150px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.product-detail h2 {
+  margin: 10px 0;
+  color: #2c3e50;
+}
+
+.product-detail p {
+  font-size: 14px;
+  color: #555;
+}

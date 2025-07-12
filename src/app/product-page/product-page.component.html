@@ -1,0 +1,10 @@
+<div class="app-container">
+  <div class="section-container">
+    <div class="section-title">قائمة المنتجات</div>
+    <app-product-list (selectedProduct)="onProductSelected($event)"></app-product-list>
+  </div>
+
+  <div class="section-container" *ngIf="selectedProduct">
+    <div class="section-title">تفاصيل المنتج</div>
+  </div>
+</div>
