@@ -1,0 +1,14 @@
+<h2>{{ isEdit ? 'تعديل منتج' : 'إضافة منتج' }}</h2>
+
+<form (ngSubmit)="save()">
+  <label>الاسم:</label>
+  <input [(ngModel)]="product.name" name="name" required /><br /><br />
+
+  <label>الصورة (رابط):</label>
+  <input [(ngModel)]="product.image" name="image" /><br /><br />
+
+  <label>الوصف:</label>
+  <textarea [(ngModel)]="product.description" name="description"></textarea><br /><br />
+
+  <button type="submit">{{ isEdit ? 'تحديث' : 'إضافة' }}</button>
+</form>

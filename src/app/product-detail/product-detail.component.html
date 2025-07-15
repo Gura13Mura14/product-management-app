@@ -1,0 +1,7 @@
+<div class="product-detail" *ngIf="product">
+  <h2>{{ product.name }}</h2>
+  <img [src]="product.image" alt="{{ product.name }}">
+  <p>{{ product.description }}</p>
+    <button (click)="deleteProduct()">🗑️ حذف المنتج</button>
+  <button [routerLink]="['/edit', product.id]">✏️ تعديل المنتج</button>
+</div>
