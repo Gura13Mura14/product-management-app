@@ -195,8 +195,6 @@ ACCESS_MODIFIER
     ;
 
 
-
-
 // Comments
 SINGLE_LINE_COMMENT: '//' ~[\r\n]* -> skip;
 COMMENT_BLOCK: '/*' .*? '*/' -> skip;

@@ -287,103 +287,96 @@ jasmineCallback
             ;
 
 
-
 htmlElement
-    : doctypeDeclaration eos?
-    | TAG_OPEN HTML_TAG_NAME htmlAttributes? HTML_TAG_CLOSE htmlContent* htmlClosingTag eos?
-    | TAG_OPEN HTML_TAG_NAME htmlAttributes? HTML_SLASH_CLOSE eos?
+    : doctypeDeclaration eos?                                        #htmlDoctype
+    | TAG_OPEN HTML_TAG_NAME htmlAttributes? HTML_TAG_CLOSE htmlContent* htmlClosingTag eos? #htmlStandardElement
+    | TAG_OPEN HTML_TAG_NAME htmlAttributes? HTML_SLASH_CLOSE eos?  #htmlSelfClosingElement
     ;
 
-    doctypeDeclaration
-        : DOCTYPE eos?
-        ;
-
+doctypeDeclaration
+    : DOCTYPE eos? #doctype
+    ;
 
 htmlAttributes
-    : (htmlAttribute | angularAttribute)* eos?
+    : (htmlAttribute | angularAttribute)* eos? #htmlAttributeList
     ;
 
 angularAttribute
-    : HTML_PROPERTY_BINDING eos?
-    | HTML_EVENT_BINDING eos?
-    | HTML_TWO_WAY_BINDING eos?
-    | HTML_STAR_BINDING eos?
-    | HTML_INTERPOLATION eos?
+    : HTML_PROPERTY_BINDING eos?         #propertyBinding
+    | HTML_EVENT_BINDING eos?            #eventBinding
+    | HTML_TWO_WAY_BINDING eos?          #twoWayBinding
+    | HTML_STAR_BINDING eos?             #structuralBinding
+    | HTML_INTERPOLATION eos?            #interpolationBinding
     ;
-
 
 htmlClosingTag
-    : TAG_OPEN HTML_SLASH HTML_TAG_NAME HTML_TAG_CLOSE eos?
+    : TAG_OPEN HTML_SLASH HTML_TAG_NAME HTML_TAG_CLOSE eos? #htmlClosing
     ;
 
-/*htmlAttributes
-    : htmlAttribute*
-    ;*/
-
 htmlAttribute
-    : HTML_ATTRIBUTE_NAME (HTML_EQUALS HTML_ATTRIBUTE_VALUE)? eos
-    | HTML_PROPERTY_BINDING (HTML_EQUALS HTML_ATTRIBUTE_VALUE)? eos
-    | HTML_EVENT_BINDING (HTML_EQUALS HTML_ATTRIBUTE_VALUE)? eos
-    | HTML_TWO_WAY_BINDING (HTML_EQUALS HTML_ATTRIBUTE_VALUE)? eos
-    | HTML_STAR_BINDING (HTML_EQUALS HTML_ATTRIBUTE_VALUE)? eos
+    : HTML_ATTRIBUTE_NAME (HTML_EQUALS HTML_ATTRIBUTE_VALUE)? eos                  #standardHtmlAttribute
+    | HTML_PROPERTY_BINDING (HTML_EQUALS HTML_ATTRIBUTE_VALUE)? eos               #propertyBindingWithValue
+    | HTML_EVENT_BINDING (HTML_EQUALS HTML_ATTRIBUTE_VALUE)? eos                  #eventBindingWithValue
+    | HTML_TWO_WAY_BINDING (HTML_EQUALS HTML_ATTRIBUTE_VALUE)? eos                #twoWayBindingWithValue
+    | HTML_STAR_BINDING (HTML_EQUALS HTML_ATTRIBUTE_VALUE)? eos                   #structuralBindingWithValue
     ;
 
 htmlContent
-    : htmlElement eos
-    | HTML_INTERPOLATION eos
-    | TEXT eos
+    : htmlElement eos             #elementContent
+    | HTML_INTERPOLATION eos     #interpolationContent
+    | TEXT eos                   #textContent
     ;
 
 // ---------- CSS Parsing ----------
-stylesheet : styleBlock? EOF ;
-
-styleBlock
-    : STYLE_OPEN cssRules STYLE_CLOSE
+stylesheet
+    : styleBlock? EOF #stylesheetRoot
     ;
 
+styleBlock
+    : STYLE_OPEN cssRules STYLE_CLOSE #cssStyleBlock
+    ;
 
 cssRules
-    : cssRule*
+    : cssRule* #cssRulesList
     ;
 
 cssRule
-  : cssSelector  CSS_LBRACE cssDeclarations? CSS_RBRACE
-  ;
-
-/*cssSelectorList
-    : cssSelector+
-    ;*/
+    : cssSelector CSS_LBRACE cssDeclarations? CSS_RBRACE #cssRuleBlock
+    ;
 
 cssSelector
-  : combinedSelector (COMMA combinedSelector)* ;
+    : combinedSelector (COMMA combinedSelector)* #cssSelectorList
+    ;
 
 combinedSelector
-  : simpleSelector (simpleSelector)* ;
+    : simpleSelector (simpleSelector)* #combinedSelectorChain
+    ;
 
 simpleSelector
-   : (CSS_CLASS_SELECTOR | CSS_ID_SELECTOR | elementSelector)+ pseudoClass?
-   ;
-elementSelector
-  : CSS_IDENTIFIER
-  ;
-pseudoClass
-  : CSS_COLON CSS_IDENTIFIER
-  ;
+    : (CSS_CLASS_SELECTOR | CSS_ID_SELECTOR | elementSelector)+ pseudoClass? #simpleSelectorNode
+    ;
 
+elementSelector
+    : CSS_IDENTIFIER #elementSelectorId
+    ;
+
+pseudoClass
+    : CSS_COLON CSS_IDENTIFIER #pseudoClassSelector
+    ;
 
 cssDeclarations
-    : cssDeclaration (CSS_SEMICOLON cssDeclaration)* CSS_SEMICOLON?
+    : cssDeclaration (CSS_SEMICOLON cssDeclaration)* CSS_SEMICOLON? #cssDeclarationsBlock
     ;
 
 cssDeclaration
-    : CSS_PROPERTY CSS_COLON cssValueList
+    : CSS_PROPERTY CSS_COLON cssValueList #cssDeclarationPair
     ;
 
 cssValueList
-    : cssValue (cssValue)*
+    : cssValue (cssValue)* #cssValueListNode
     ;
 
 cssValue
-    : CSS_VALUE
-    | CSS_PROPERTY // أحيانًا أسماء الخواص تُستخدم كقيم، مثل `transition: background-color`
+    : CSS_VALUE         #cssRawValue
+    | CSS_PROPERTY      #cssPropertyAsValue
     ;
